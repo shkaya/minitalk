@@ -40,11 +40,17 @@
     がPID 1を持つ。
 */
 
+// やりたいこと
+// プロセスIDを介して通信する。
+// 0か1しか送れないので、ビット単位まで分解して送る。
+// クライアント側で分解,送信 -> サーバー側で組み立て,出力
+
 int main(void)
 {
-    int pid; // What pid_t is
+	// pid_t = int ... PIDを一貫して扱うための標準的な型
+    pid_t pid;
 
-    pid = getpid(); // get pid?
+    pid = getpid();
     printf("Sever PID: %d\n", pid);
     return (0);
 }
