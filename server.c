@@ -2,49 +2,39 @@
 #include <stdio.h>
 #include <unistd.h>
 
+void	signal_handle(int signum)
+{
+	static int bit_count = 0;
+    static char c;
+	// if (signum == SIGUSR1)
+    // 	printf("SIGUSR1を受信しました。\n");
+    // else if (signum == SIGUSR2)
+    // 	printf("SIGUSR2を受信しました。\n");
+
+	// SIGUSR1(ON)を受信した場合、確かな場所に1を設定。
+    if (signum == SIGUSR1)
+		c |= (1 << bit_count); //cのbit_count番目のビットを1にする
+    else if (signum == SIGUSR2)
+    	; // SIGUSR2(OFF)を受信した時、何もしない。(デフォが0)
+
+    bit_count++;
+	// 一バイト分(8ビット)受信したら、一文字を出力
+    if (bit_count == 8)
+    {
+        if (c == '\0')
+        	write(1, "\n", 1);
+        else
+    		write(1, &c, 1);
+        // リセット。
+        c = 0;
+        bit_count = 0;
+    }
+}
 /*
-    ---- Available function ----
-    	#include <signal.h>
-	1.signal
-    >> 指定したシグナルが発生した時に実行されるシグナルハンドラを設定。
-	2.sigemptyset
-    >> 指定したシグナルセットを空にする。
-    3.sigaddset
-    >> 指定したシグナルをシグナルセットに追加する。
-    // シグナルとシグナルセットが存在する？
-    4.sigaction (?)
-    >> シグナルハンドラを設定するために使用される。この関数はシグナル処理のため
-    の詳細なオプションを提供する。(?)(?)(?)
-	5.kill
-    >> 指定したプロセスID(PID)にシグナルを送信する。
-
-    	#include <unistd.h>
-    6.getpid
-    >> 現在のプロセスID(PID)を返す。
-	7.pause
-    >> シグナルを受信するまでプロセスを一時停止にする。シグナルを受信すると
-    、シグナルハンドラが実行される。
-    8.sleep
-    >> 指定した秒数だけプロセスを一時停止する。
-    9.usleep
-    >> 指定したマイクロ秒(1秒の100万分の１)だけプロセスを一時停止する。
-
-	What 'プロセス' is
-    >> プロセスは、コンピュータの基本的な実行単位。
-    実行中のプログラム(実際に調理中の料理)。
-    What 'PID' is
-    >> OS内で実行されている各プロセスを一意に識別するための番号。
-    [PID追加情報]
-    親プロセスID(PPID): 親プロセスとは現在のプロセスを生成したプロセス。
-	PID 1: システム起動時に最初に生成されるプロセス(intプロセスやsystemdプロセス)
-    がPID 1を持つ。
+	#define SIGUSR1 30 -> ONの時
+    #define SIGUSR2 31 -> OFFの時
+    とする。
 */
-
-// やりたいこと
-// プロセスIDを介して通信する。
-// 0か1しか送れないので、ビット単位まで分解して送る。
-// クライアント側で分解,送信 -> サーバー側で組み立て,出力
-
 int main(void)
 {
 	// pid_t = int ... PIDを一貫して扱うための標準的な型
@@ -52,5 +42,16 @@ int main(void)
 
     pid = getpid();
     printf("Sever PID: %d\n", pid);
+
+    // シグナルハンドラの設定
+    signal(SIGUSR1, signal_handle); // ON(1)が送られてきた時
+    signal(SIGUSR2, signal_handle); // OFF(0)が送られてきた時
+
+	while (1)
+    {
+    	pause(); // シグナルを待機
+        // printf("シグナルを受信しました。\n");
+    }
+
     return (0);
 }
