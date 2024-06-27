@@ -7,14 +7,14 @@
 # define SLEEP_US 100
 #endif
 
-void	err_exit(char *str)
+static void	err_exit(char *str)
 {
     ft_putstr_fd(str, 2);
 	exit(EXIT_FAILURE);
 }
 
 /* 1文字をさらにbit単位(8つ)に分解して送信する関数 */
-void	send_msg(pid_t pid, char *msg)
+static void	send_msg(pid_t pid, char *msg)
 {
     int	i;
 

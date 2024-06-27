@@ -8,7 +8,8 @@ typedef struct	s_msg
     int		bit_count;
 }				t_msg;
 
-void	signal_handler(int signum, siginfo_t *info, void *dummy)
+/* bit単位で送られてきた信号を文字にそして文字列に組み立てていく関数 */
+static void	signal_handler(int signum, siginfo_t *info, void *dummy)
 {
     (void)info;
     (void)dummy;
@@ -27,6 +28,8 @@ void	signal_handler(int signum, siginfo_t *info, void *dummy)
     	msg.c = 0;
         msg.bit_count = 0;
     }
+    /* ACT */
+    kill(info->si_pid, SIGUSR1);
 }
 
 /* struct sigaction (man sigaction)*/

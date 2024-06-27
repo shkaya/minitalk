@@ -8,7 +8,7 @@ typedef struct	s_msg
     int		bit_count;
 }				t_msg;
 
-void	signal_handler(int signum, siginfo_t *info, void *dummy)
+static void	signal_handler(int signum, siginfo_t *info, void *dummy)
 {
     (void)info;
     (void)dummy;
