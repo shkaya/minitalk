@@ -97,13 +97,11 @@ int main(int argc, char *argv[])
     ft_memset(&sa, 0, sizeof(sigaction));
     sigemptyset(&(sa.sa_mask));
     sa.sa_sigaction = signal_handler;
-    sigaddset(&(sa.sa_mask), SIGUSR1);
-    sigaddset(&(sa.sa_mask), SIGUSR2);
     sa.sa_flags = SA_SIGINFO;
     if (sigaction(SIGUSR1, &sa, NULL) < 0)
     	exit(EXIT_FAILURE);
 
     /*------- serverに文字列を送信する ---------*/
 	send_msg(g_ack.pid, argv[2]);
-    return (0);
+    return (EXIT_SUCCESS);
 }

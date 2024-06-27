@@ -8,6 +8,10 @@ typedef struct	s_msg
     int		bit_count;
 }				t_msg;
 
+// Sometimes info->si_pid become 0
+// Must Return correct (client)PID
+static volatile sig_atomic_t	g_client_pid;
+
 /* bit単位で送られてきた信号を文字にそして文字列に組み立てていく関数 */
 static void	signal_handler(int signum, siginfo_t *info, void *dummy)
 {
@@ -29,7 +33,13 @@ static void	signal_handler(int signum, siginfo_t *info, void *dummy)
         msg.bit_count = 0;
     }
     /* ACT */
-    kill(info->si_pid, SIGUSR1);
+    if (info->si_pid != 0)
+    {
+        g_client_pid = info->si_pid;
+    	kill(info->si_pid, SIGUSR1);
+    }
+    else
+    	kill (g_client_pid, SIGUSR1);
 }
 
 /* struct sigaction (man sigaction)*/
