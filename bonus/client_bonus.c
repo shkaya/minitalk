@@ -39,7 +39,7 @@ static void	send_msg(pid_t pid, char *msg)
             while (!g_ack.flg)
             	pause(); // ハンドラ関数内でserverPIDが正しいことがわかったら(flg=1)脱出。 ー①
             g_ack.flg = 0;
-            usleep(10);
+            usleep(SLEEP_US);
     	    if (1 & (*msg >> i))
             {
 				if (kill(pid, SIGUSR1) == -1)
@@ -97,6 +97,8 @@ int main(int argc, char *argv[])
     ft_memset(&sa, 0, sizeof(sigaction));
     sigemptyset(&(sa.sa_mask));
     sa.sa_sigaction = signal_handler;
+	sigaddset(&(sa.sa_mask), SIGUSR1);
+    sigaddset(&(sa.sa_mask), SIGUSR2);
     sa.sa_flags = SA_SIGINFO;
     if (sigaction(SIGUSR1, &sa, NULL) < 0)
     	exit(EXIT_FAILURE);
