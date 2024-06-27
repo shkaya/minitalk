@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     }
     /* ----- pid -----*/
     pid_t	pid;
-	pid = atoi(argv[1]);
+	pid = ft_atoi(argv[1]);
 
 	/*エラーハンドリング2*/
     if (pid < 100 | 99998 < pid)
