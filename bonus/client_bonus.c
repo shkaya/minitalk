@@ -3,8 +3,9 @@
 #include <signal.h>
 #include "../libft/libft.h"
 
+/* 環境によって違うから試してみて */
 #ifndef SLEEP_US
-# define SLEEP_US 100
+# define SLEEP_US 200
 #endif
 
 // sig_atomic_t: シグナルハンドラ関数内で使用するための特別なint型。
@@ -50,7 +51,6 @@ static void	send_msg(pid_t pid, char *msg)
 				if (kill(pid, SIGUSR2) == -1)
                 	err_exit("Error: Kill functions Failed\n");
             }
-    	    usleep(SLEEP_US);
     	    i++;
     	}
         if (*msg == '\0')

@@ -4,7 +4,7 @@
 #include "../libft/libft.h"
 
 #ifndef SLEEP_US
-# define SLEEP_US 100
+# define SLEEP_US 150
 #endif
 
 static void	err_exit(char *str)

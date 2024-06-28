@@ -2,6 +2,11 @@
 #include <signal.h>
 #include "../libft/libft.h"
 
+/* 環境によって違うから試してみて */
+#ifndef	SLEEP_US
+# define SLEEP_US 100
+#endif
+
 typedef struct	s_msg
 {
 	char	c;
@@ -32,6 +37,7 @@ static void	signal_handler(int signum, siginfo_t *info, void *dummy)
     	msg.c = 0;
         msg.bit_count = 0;
     }
+	usleep(SLEEP_US);
     /* ACT */
     if (info->si_pid != 0)
     {
