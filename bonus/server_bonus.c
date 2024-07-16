@@ -20,7 +20,6 @@ static volatile sig_atomic_t	g_client_pid;
 /* bit単位で送られてきた信号を文字にそして文字列に組み立てていく関数 */
 static void	signal_handler(int signum, siginfo_t *info, void *dummy)
 {
-    (void)info;
     (void)dummy;
 
 	static t_msg	msg = {0};
@@ -38,7 +37,7 @@ static void	signal_handler(int signum, siginfo_t *info, void *dummy)
         msg.bit_count = 0;
     }
 	usleep(SLEEP_US);
-    /* ACT */
+    /* ACK */
     if (info->si_pid != 0)
     {
         g_client_pid = info->si_pid;

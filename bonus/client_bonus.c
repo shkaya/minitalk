@@ -26,13 +26,13 @@ static void	err_exit(char *str)
 }
 
 /* 1文字をさらにbit単位(8つ)に分解して送信する関数 */
-/* ACTを使って通信をより堅実に */
+/* ACKを使って通信をより堅実に */
 static void	send_msg(pid_t pid, char *msg)
 {
     int	i;
 
-	g_ack.flg = 1; // flg=1であることが①での脱出手段
-    while (1)
+	g_ack.flg = 1; // flg=1であることが次の通信へ進む合図
+    while (*msg != '\0')
     {
         i = 0;
     	while (i < 8)
@@ -53,8 +53,6 @@ static void	send_msg(pid_t pid, char *msg)
             }
     	    i++;
     	}
-        if (*msg == '\0')
-        	return;
         msg++;
     }
 }
@@ -63,10 +61,9 @@ static void	send_msg(pid_t pid, char *msg)
 /* シグナルハンドラ関数 */
 static void	signal_handler(int signum, siginfo_t *info, void *dummy)
 {
-    (void)signum;
     (void)dummy;
     // serverのPIDをチェックし、正しかったらflgを立てる
-	if (g_ack.pid == info->si_pid || info->si_pid == 0)
+	if ((g_ack.pid == info->si_pid || info->si_pid == 0) && signum == SIGUSR1)
     	g_ack.flg = 1;
     return;
 }
